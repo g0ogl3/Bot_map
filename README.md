@@ -19,8 +19,8 @@
 
 1. **Клонируйте репозиторий:**
 ```bash
-git clone <url_to_repository>
-cd <repository_name>
+git clone https://github.com/g0ogl3/Bot_map.git
+cd Bot_map
 ```
 2. **Установите зависимости:**
 ```bash
