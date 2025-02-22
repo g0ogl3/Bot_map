@@ -62,9 +62,7 @@ class DB_Map():
             coordinates = cursor.fetchone()
             return coordinates
 
-    def create_graph(self, path, cities, marker_color=None):
-        if marker_color is None:
-            marker_color = 'red'
+    def create_graph(self, path, cities, marker_color='red'):
         fig = plt.figure(figsize=(10, 5))
         ax = plt.axes(projection=ccrs.PlateCarree())
         ax.add_feature(cfeature.LAND, facecolor='lightgreen')
@@ -73,6 +71,11 @@ class DB_Map():
         ax.add_feature(cfeature.BORDERS, linestyle=':')
         ax.add_feature(cfeature.LAKES, facecolor='blue')
         ax.add_feature(cfeature.RIVERS)
+        ax.add_feature(cfeature.STATES, linestyle='--')
+        ax.add_feature(cfeature.RIVERS, edgecolor='blue')
+        ax.add_feature(cfeature.LAKES, edgecolor='blue', facecolor='none')
+        ax.add_feature(cfeature.LAND, edgecolor='black', facecolor='none')
+        ax.add_feature(cfeature.OCEAN, edgecolor='black', facecolor='none')
 
         for city in cities:
             coordinates = self.get_coordinates(city)
