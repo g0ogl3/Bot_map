@@ -1,3 +1,4 @@
 telebot
 matplotlib
 cartopy
+geopy
