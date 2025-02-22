@@ -160,7 +160,7 @@ class DB_Map():
             return cities
 
     def get_weather(self, city_name):
-        api_key = 'YOUR_API_WEATHER_KEY'
+        api_key = WEATHER_API_KEY
         url = f'http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units=metric'
         response = requests.get(url)
         if response.status_code == 200:
@@ -172,7 +172,7 @@ class DB_Map():
             return 'Weather information not available'
 
     def get_time(self, city_name):
-        api_key = 'YOUR_API_TIME_KEY'
+        api_key = TIME_API_KEY
         url = f'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=zone&zone={city_name}'
         response = requests.get(url)
         if response.status_code == 200:
