@@ -1,10 +1,11 @@
 import sqlite3
 from config import *
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+matplotlib.use('Agg')
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+
 
 
 class DB_Map():
@@ -34,6 +35,8 @@ class DB_Map():
                 return 1
             else:
                 return 0
+            
+    
 
             
     def select_cities(self, user_id):
@@ -59,23 +62,41 @@ class DB_Map():
             coordinates = cursor.fetchone()
             return coordinates
 
-    def create_graph(self, path, cities):
+    def create_graph(self, path, cities, marker_color=None):
+        if marker_color is None:
+            marker_color = 'red'
         fig = plt.figure(figsize=(10, 5))
         ax = plt.axes(projection=ccrs.PlateCarree())
-        ax.add_feature(cfeature.LAND)
-        ax.add_feature(cfeature.OCEAN)
+        ax.add_feature(cfeature.LAND, facecolor='lightgreen')
+        ax.add_feature(cfeature.OCEAN, facecolor='lightblue')
         ax.add_feature(cfeature.COASTLINE)
         ax.add_feature(cfeature.BORDERS, linestyle=':')
+        ax.add_feature(cfeature.LAKES, facecolor='blue')
+        ax.add_feature(cfeature.RIVERS)
 
         for city in cities:
             coordinates = self.get_coordinates(city)
             if coordinates:
                 lat, lng = coordinates
-                ax.plot(lng, lat, marker='o', color='red', markersize=5, transform=ccrs.Geodetic())
+                ax.plot(lng, lat, marker='o', color=marker_color, markersize=5, transform=ccrs.Geodetic())
                 ax.text(lng + 3, lat - 3, city, transform=ccrs.Geodetic())
 
         plt.savefig(path)
         plt.close()
+
+    def set_marker_color(self, user_id, color):
+        conn = sqlite3.connect(self.database)
+        with conn:
+            conn.execute('INSERT OR REPLACE INTO user_colors (user_id, color) VALUES (?, ?)', (user_id, color))
+            conn.commit()
+
+    def get_marker_color(self, user_id):
+        conn = sqlite3.connect(self.database)
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT color FROM user_colors WHERE user_id = ?', (user_id,))
+            result = cursor.fetchone()
+            return result[0] if result else 'red'
 
         
     def draw_distance(self, city1, city2):
